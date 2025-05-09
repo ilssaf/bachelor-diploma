@@ -80,7 +80,7 @@ $S$ – стартовый нетерминал.
 
 Реализация парсера и генератора AST (абстрактного синтаксического дерева) опирается на ANTLR (ANother Tool for Language Recognition)[31].
 Лексические правила (начинаются с большой буквы) описывают, как разбить входной текст на токены.
-Пример:
+Пример:\\
 \begin{verbatim}
 // Лексическое правило для целых чисел
 INT : [0-9]+ ; 
@@ -90,7 +90,6 @@ INT : [0-9]+ ;
 \begin{verbatim}
 // Синтаксическое правило для списка аргументов
 args : expr (',' expr)* ; 
-
 \end{verbatim}
 Для группировки, повторений и альтернатив в ANTLR применяются:\\
 «()» – группировка\\
@@ -127,213 +126,82 @@ bi:
     superset:
     name: superset-1
 \end{verbatim}
-В таблице (?)  приведена часть полной грамматики, описывающая
-выборочные правила.\\
-
-\begin{longtable}{|p{3in}|p{3in}|}
-    \hline
-    Грамматика ANTLR4            & Комментарий                                                                                                                                                           \\ \hline
-    \begin{minipage}{2.6in}
-        \begin{verbatim}
-grammar ConfigDSL;
-        \end{verbatim}
-    \end{minipage}      &                                                                                                                                                                               \\ \hline
-    \begin{minipage}{3in}
-        \begin{verbatim}
-configFile
-: projectDef
-sourcesDef
-streamingDef
-storageDef
-biDef EOF
-;
-\end{verbatim}
-    \end{minipage}        &
-    \begin{minipage}{3in}Корневое правило: определяет общую структуру конфигурационного файла, состоящего из последовательных блоков\end{minipage}                                                       \\ \hline
-    \begin{minipage}{2.6in}
-        \begin{verbatim}
-projectDef
-: PROJECT COLON NAME COLON 
-STRING VERSION COLON STRING 
-DESCRIPTION COLON STRING
-;
-    \end{verbatim}
-    \end{minipage} &
-    \begin{minipage}{3in}Правило для секции "project": описывает метаданные проекта\end{minipage}                                                                                                        \\ \hline
-    \begin{minipage}{3in}
-        \begin{verbatim}
-sourcesDef
-: SOURCES COLON 
-sourceItem+
-        ;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для секции «sources»: определяет список источников данных.
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-sourceItem
-: DASH NAME COLON STRING 
-TYPE COLON sourceType
-( PORT COLON NUMBER )?
-( USERNAME COLON STRING )?
-( PASSWORD COLON STRING )?
-( ACCESS_KEY COLON STRING )?
-( SECRET_KEY COLON STRING )?
-( REGION COLON STRING )?
-( BUCKET COLON STRING )?
-;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для описания одного источника данных: имя, тип (Postgres/S3) и опциональные параметры (порт, учётные данные, детали S3).
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-sourceType
-: POSTGRES
-| S3
-;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для определения типа источника данных (PostgreSQL или S3).
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-streamingDef
-: STREAMING COLON 
-(kafkaDef | connectDef)+
-        ;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для секции «streaming»: задаёт компоненты потоковой обработки (Kafka или Kafka Connect).
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-kafkaDef
-: KAFKA COLON 
-NUM_BROKERS COLON 
-NUMBER
-;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для конфигурации Kafka: число брокеров.
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-connectDef
-: CONNECT COLON 
-NAME COLON STRING
-        ;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для конфигурации Kafka Connect: имя инстанса.
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-storageDef
-: STORAGE COLON 
-clickhouseDef
-;
-
-clickhouseDef
-: CLICKHOUSE COLON 
-NAME COLON STRING
-;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для секции «storage»: задаёт компонент хранения данных и его параметры (ClickHouse).
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-biDef
-: BI COLON supersetDef
-;
-
-supersetDef
-: SUPERSET COLON NAME COLON STRING
-    ( USERNAME COLON STRING )?
-    ( PASSWORD COLON STRING )?
-;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Правило для секции «bi»: задаёт инструмент BI (Apache Superset) и его опциональные параметры.
-    \end{minipage}
-    \\ \hline
-
-    \begin{minipage}{3in}
-        \begin{verbatim}
-// Лексемы (tokens)
-PROJECT     : 'project';
-SOURCES     : 'sources';
-STREAMING   : 'streaming';
-STORAGE     : 'storage';
-BI          : 'bi';
-KAFKA       : 'kafka';
-CONNECT     : 'connect';
-CLICKHOUSE  : 'clickhouse';
-SUPERSET    : 'superset';
-NAME        : 'name';
-VERSION     : 'version';
-DESCRIPTION : 'description';
-TYPE        : 'type';
-PORT        : 'port';
-USERNAME    : 'username';
-PASSWORD    : 'password';
-ACCESS_KEY  : 'access_key';
-SECRET_KEY  : 'secret_key';
-REGION      : 'region';
-BUCKET      : 'bucket';
-NUM_BROKERS : 'num_brokers';
-POSTGRES    : 'postgres';
-S3          : 's3';
-COLON       : ':';
-DASH        : '-';
-STRING      : '"' ( ~[\\"] | '\\' . )*? '"' ;
-NUMBER      : [0-9]+ ;
-WS          : [ \t\r\n]+ -> skip ;
-    \end{verbatim}
-    \end{minipage}
-                                 &
-    \begin{minipage}{2.6in}
-        Лексемы (tokens): ключевые слова, разделители, строковые и числовые литералы, пробельные символы.                                                                                     \end{minipage} \\ \hline
-\end{longtable}
-
-%\FloatBarrier % заставить рисунки и другие подвижные (float) элементы остановиться
+В приложении \ref{grammatic-dpd}  приведена часть полной грамматики, описывающая правила в форме ANTLR \\
 
 
-\section{Выводы} \label{ch3:conclusion}
 
-Текст выводов по главе \thechapter.
+% \FloatBarrier % заставить рисунки и другие подвижные (float) элементы остановиться
+
+
+\section{Описание процесса автогенерации конфигураций программных систем платформы данных} \label{ch3:process_generation}
+Архитектура инструмента в значительной степени повторяет логическое разбиение на блоки, которое представлено в начале этой главы.
+
+Пакет \texttt{data platform} взаимодействует с пакетом \texttt{core}, внутри которого как раз таки находятся парсер, генератор, сервисы, а также другие дополнительные элементы.
+Диаграмма представлена на рисунке \ref{fig:diagram_package}
+
+\begin{figure}
+    \center
+    \includegraphics [scale=0.4] {my_folder/images/diagram_package}
+    \caption{Диаграмма пакетов}
+    \label{fig:diagram_package}
+\end{figure}
+\FloatBarrier
+Стоит детальнее рассмотреть содержимое пакета \texttt{core}, ведь именно там выполняется генерация конфигураций программных систем платформы данных.
+Процесс автоматической генерации конфигураций для платформы данных с использованием инструмента \texttt{dpd} можно разделить на следующие ключевые этапы:
+\begin{enumerate}[1.]
+
+    \item Инициация через командную строку (\texttt{main.py})
+          \begin{itemize}
+              \item \textbf{Входная точка.} Пользователь взаимодействует с инструментом через CLI, вызывая основную команду \texttt{dpd}.
+              \item \textbf{Команда \texttt{generate}.} Логика запускается командой
+                    \texttt{dpd generate} с обязательным параметром
+                    \texttt{--config <путь\_к\_YAML>}.
+              \item \textbf{Оркестрация.} Файл \texttt{main.py} парсит аргументы командной строки, вызывает функции валидации и загрузки конфигурации, инициализирует генератор платформы и запускает процесс, выводя информативные сообщения.
+          \end{itemize}
+
+    \item Валидация и загрузка конфигурации (\texttt{main.py} \textrightarrow\ \texttt{dpd.models}):
+          \begin{itemize}
+              \item \textbf{Проверка схемы.} Перед генерацией выполняется валидация YAML-конфига по JSON-схеме (\texttt{src/dpd/schema.json}) с помощью функции \texttt{validate} из \texttt{dpd.models} и библиотеки \texttt{jsonschema}.
+              \item \textbf{Загрузка и моделирование.} При успешной валидации содержимое конфигурации загружается и преобразуется в Python-модели (\texttt{Config}, \texttt{Postgres}, \texttt{S3} и т.~п.) через функцию \texttt{load\_config\_from\_file}.
+          \end{itemize}
+
+    \item Инициализация генератора платформы (\texttt{main.py} \textrightarrow\ \texttt{data\_platform.py})
+          \begin{itemize}
+              \item \textbf{Создание \texttt{DPGenerator}.} В конструктор передаётся смоделированная конфигурация (\texttt{conf}).
+              \item \textbf{Начальное состояние.} Генератор инициализирует пустые словари для сервисов и настроек, создаёт описание сетей Docker на основе имени проекта, подготавливает \texttt{PortManager} и \texttt{EnvManager}.
+          \end{itemize}
+
+    \item Обработка сервисов и делегирование (\texttt{DPGenerator.process\_services})
+          \begin{itemize}
+              \item \textbf{Итерация.} Метод перебирает секции конфигурации (\texttt{sources}, \texttt{streaming}, \texttt{storage}, \texttt{bi}).
+              \item \textbf{Делегирование.} В зависимости от компонента (\texttt{postgres}, \texttt{s3}, \texttt{kafka}, \texttt{clickhouse}, \texttt{superset}) вызываются соответствующие статические методы \texttt{generate()} из модулей \texttt{dpd.services}.
+              \item \textbf{Сборка.} Каждый сервис генерирует свой блок для \texttt{docker-compose.yml} и вспомогательные файлы, результат добавляется в словарь \texttt{self.services}.
+              \item \textbf{Зависимости.} Для некоторых генераций (например, \texttt{KafkaConnectService}) учитываются заранее созданные компоненты (Postgres-источники и т.~п.).
+          \end{itemize}
+
+    \item Генерация вспомогательных файлов
+          \begin{itemize}
+              \item \textbf{README.md.} \texttt{ReadmeService.generate\_file()} создаёт описание платформы и инструкции.
+              \item \textbf{.env.} \texttt{EnvManager.generate\_env\_file()} помещает все секреты (пароли, ключи) в файл \texttt{.env}.
+              \item \textbf{init.sql.} \texttt{PostgresqlService.generate\_init\_sql\_script()} формирует SQL-скрипт для инициализации (создание публикации, репликационные слоты).
+              \item \textbf{postgresql.conf.} \texttt{PostgresqlService.generate\_conf\_file()} генерирует конфигурацию WAL (напр., \texttt{wal\_level}, \texttt{max\_wal\_senders}, \texttt{max\_replication\_slots}).
+              \item \textbf{Конфигурации Debezium и S3SinkConnector.} Функции \texttt{generate\_debezium\_configs()} и \texttt{generate\_s3sink\_configs()} создают JSON-файлы для репликации Postgres→Kafka и Kafka→S3, которые затем загружаются в Kafka Connect через REST API.
+              \item \textbf{Плагины для Kafka Connect.} Автоматически скачиваются JAR-файлы S3SinkConnector и ClickHouseConnector.
+              \item \textbf{AKHQ.} \texttt{KafkaUIService.generate\_conf\_file()} связывает веб-интерфейс AKHQ с кластерами Kafka и Kafka Connect.
+          \end{itemize}
+
+    \item Сборка и запись итогового файла
+          \begin{itemize}
+              \item \textbf{Формирование структуры.} Метод \texttt{generate()} собирает все настройки, описания сервисов, тома (метод \texttt{\_generate\_volumes()}) и сети в единый Python-словарь, соответствующий формату \texttt{docker-compose.yml}.
+              \item \textbf{Сериализация.} Структура преобразуется в YAML при помощи \texttt{PyYAML}.
+              \item \textbf{Запись.} Итоговый YAML записывается в файл \texttt{docker-compose.yml} в директории с именем проекта. Директория создаётся автоматически при необходимости.
+          \end{itemize}
+\end{enumerate}
+
+Таким образом, инструмент \texttt{dpd} берёт на вход декларативное описание платформы данных, проверяет его, последовательно генерирует конфигурации для каждого компонента и собирает их в готовый к запуску стек под управлением Docker Compose, а также создаёт сопутствующие файлы (\texttt{README.md}, \texttt{.env}, \texttt{postgresql.conf}, \texttt{dbz\_conf.json}, \texttt{s3\_sink.json}, \texttt{akhq\_conf.yml} и др.).
+
+
+% Текст выводов по главе \thechapter.
 
 
 %% Вспомогательные команды - Additional commands

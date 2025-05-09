@@ -1,73 +1,138 @@
-\chapter{Некоторые дополнительные примеры}\label{appendix-extra-examples}							% 
+\chapter{SQL код для забора данных из Kafka в ClickHouse}\label{ex_1_sql}							% 
 
-В приложении приведены формулы \eqref{eq:Pi-app}, \eqref{eq:Pi-app-}, \firef{fig:spbpu_hydrotower-app}, \firef{fig:spbpu_hydrotower-app-}, \taref{tab:ToyCompare-app}, \taref{tab:ToyCompare-app-}\footnote{Внимание! Пример оформления подстрочной ссылки (сноски).}.
+В приложениии приведен SQL код для забора данных из Kafka топика в ClickHouse для таблицы \texttt{orders}
+
+\begin{lstlisting}[%
+	language=SQL,%      язык
+	numbers=left,%      нумерация строк слева
+	stepnumber=1,%      номер каждой строки
+	firstnumber=1,%     начинают с 1
+	numberstyle=\tiny\color{gray},% стиль номеров
+	numbersep=5pt,%     отступ номеров от кода
+	basicstyle=\ttfamily\small,% шрифт кода
+	keywordstyle=\color{blue}\bfseries,% стиль ключевых слов
+	stringstyle=\color{red},% стиль строковых литералов
+	commentstyle=\color{green!50!black},% стиль комментариев
+	frame=single,%      рамка вокруг кода
+	breaklines=true,%   автоматический перенос строк
+	caption={SQL код для забора данных из Kafka в ClickHouse},%
+	label={lst:clickhouse_schema}% метка для ссылки
+  ]
+  CREATE TABLE clickhouse_1_db.kafka_orders (data String)
+  ENGINE = Kafka()
+  SETTINGS kafka_broker_list = 'kafka-0:9092,kafka-1:9092,kafka-2:9092,kafka-3:9092,kafka-4:9092,kafka-5:9092',
+		   kafka_topic_list  = 'postgres_1.public.orders',
+		   kafka_group_name  = 'kafka-ch',
+		   kafka_format      = 'JSONAsString';
+  
+  CREATE TABLE clickhouse_1_db.orders
+  (
+	 order_id            Int16,
+	 customer_id         Nullable(String),
+	 employee_id         Nullable(Int16),
+	 order_date          Nullable(Date),
+	 required_date       Nullable(Date),
+	 shipped_date        Nullable(Date),
+	 ship_via            Nullable(Int16),
+	 freight             Nullable(Float32),
+	 ship_name           Nullable(String),
+	 ship_address        Nullable(String),
+	 ship_city           Nullable(String),
+	 ship_region         Nullable(String),
+	 ship_postal_code    Nullable(String),
+	 ship_country        Nullable(String)
+  )
+  ENGINE = MergeTree()
+  ORDER BY order_id;
+  
+  CREATE MATERIALIZED VIEW clickhouse_1_db.kafka_orders_mv
+  TO clickhouse_1_db.orders AS
+  SELECT
+	 CAST(JSON_VALUE(data, '$.after.order_id')              AS Int16)           AS order_id,
+	 CAST(JSON_VALUE(data, '$.after.customer_id')           AS Nullable(String)) AS customer_id,
+	 CAST(JSON_VALUE(data, '$.after.employee_id')           AS Nullable(Int16))  AS employee_id,
+	 CAST(toDate(CAST(JSON_VALUE(data, '$.after.order_date')    AS Nullable(Int64))) AS Nullable(Date))   AS order_date,
+	 CAST(toDate(CAST(JSON_VALUE(data, '$.after.required_date') AS Nullable(Int64))) AS Nullable(Date))   AS required_date,
+	 CAST(toDate(CAST(JSON_VALUE(data, '$.after.shipped_date')  AS Nullable(Int64))) AS Nullable(Date))   AS shipped_date,
+	 CAST(JSON_VALUE(data, '$.after.ship_via')              AS Nullable(Int16))  AS ship_via,
+	 CAST(JSON_VALUE(data, '$.after.freight')               AS Nullable(Float32))AS freight,
+	 CAST(JSON_VALUE(data, '$.after.ship_name')             AS Nullable(String)) AS ship_name,
+	 CAST(JSON_VALUE(data, '$.after.ship_address')          AS Nullable(String)) AS ship_address,
+	 CAST(JSON_VALUE(data, '$.after.ship_city')             AS Nullable(String)) AS ship_city,
+	 CAST(JSON_VALUE(data, '$.after.ship_region')           AS Nullable(String)) AS ship_region,
+	 CAST(JSON_VALUE(data, '$.after.ship_postal_code')      AS Nullable(String)) AS ship_postal_code,
+	 CAST(JSON_VALUE(data, '$.after.ship_country')          AS Nullable(String)) AS ship_country
+  FROM clickhouse_1_db.kafka_orders;
+  \end{lstlisting}
+
+% В приложении приведены формулы \eqref{eq:Pi-app}, \eqref{eq:Pi-app-}, \firef{fig:spbpu_hydrotower-app}, \firef{fig:spbpu_hydrotower-app-}, \taref{tab:ToyCompare-app}, \taref{tab:ToyCompare-app-}\footnote{Внимание! Пример оформления подстрочной ссылки (сноски).}.
 
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app-} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
-%
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app-}  
-\end{figure}
+% \begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
+% \label{eq:Pi-app-} % eq - equations, далее название, ch поставлено для избежания дублирования
+% \pi \approx 3,141.
+% \end{equation}
+% %
+% %
+% \begin{figure}[ht!] 
+% 	\center
+% 	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
+% 	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
+% 	\label{fig:spbpu_hydrotower-app-}  
+% \end{figure}
 
-\begin{table} [htbp]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app-}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
-
-
+% \begin{table} [htbp]% Пример оформления таблицы
+% 	\centering\small
+% 	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
+% 	\label{tab:ToyCompare-app-}		
+% 	\begin{tabular}{|l|l|l|l|l|l|}
+% 		\hline
+% 		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
+% 		\hline
+% 		$g_1$&0&1&1&0&1\\ \hline
+% 		$g_2$&1&2&0&1&1\\ \hline
+% 		$g_3$&0&1&0&1&1\\ \hline
+% 		$g_4$&1&2&1&0&2\\ \hline
+% 		$g_5$&1&1&0&1&2\\ \hline
+% 		$g_6$&1&1&1&2&2\\ \hline		
+% 	\end{tabular}	
+% 	\normalsize% возвращаем шрифт к нормальному
+% \end{table}
 
 
-\section{Подраздел приложения}\label{app-2-1}							
 
 
-\begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
-\label{eq:Pi-app} % eq - equations, далее название, ch поставлено для избежания дублирования
-\pi \approx 3,141.
-\end{equation}
-%
-%
-\begin{figure}[ht!] 
-	\center
-	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
-	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
-	\label{fig:spbpu_hydrotower-app}  
-\end{figure}
+% \section{Подраздел приложения}\label{app-2-1}							
 
-\begin{table} [htbp]% Пример оформления таблицы
-	\centering\small
-	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
-	\label{tab:ToyCompare-app}		
-	\begin{tabular}{|l|l|l|l|l|l|}
-		\hline
-		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
-		\hline
-		$g_1$&0&1&1&0&1\\ \hline
-		$g_2$&1&2&0&1&1\\ \hline
-		$g_3$&0&1&0&1&1\\ \hline
-		$g_4$&1&2&1&0&2\\ \hline
-		$g_5$&1&1&0&1&2\\ \hline
-		$g_6$&1&1&1&2&2\\ \hline		
-	\end{tabular}	
-	\normalsize% возвращаем шрифт к нормальному
-\end{table}
+
+% \begin{equation}% лучше не оставлять пропущенную строку (\par) перед окружениями для избежания лишних отсупов в pdf
+% \label{eq:Pi-app} % eq - equations, далее название, ch поставлено для избежания дублирования
+% \pi \approx 3,141.
+% \end{equation}
+% %
+% %
+% \begin{figure}[ht!] 
+% 	\center
+% 	\includegraphics [scale=0.27] {my_folder/images//spbpu_hydrotower}
+% 	\caption{Вид на гидробашню СПбПУ \cite{spbpu-gallery}} 
+% 	\label{fig:spbpu_hydrotower-app}  
+% \end{figure}
+
+% \begin{table} [htbp]% Пример оформления таблицы
+% 	\centering\small
+% 	\caption{Представление данных для сквозного примера по ВКР \cite{Peskov2004}}%
+% 	\label{tab:ToyCompare-app}		
+% 	\begin{tabular}{|l|l|l|l|l|l|}
+% 		\hline
+% 		$G$&$m_1$&$m_2$&$m_3$&$m_4$&$K$\\
+% 		\hline
+% 		$g_1$&0&1&1&0&1\\ \hline
+% 		$g_2$&1&2&0&1&1\\ \hline
+% 		$g_3$&0&1&0&1&1\\ \hline
+% 		$g_4$&1&2&1&0&2\\ \hline
+% 		$g_5$&1&1&0&1&2\\ \hline
+% 		$g_6$&1&1&1&2&2\\ \hline		
+% 	\end{tabular}	
+% 	\normalsize% возвращаем шрифт к нормальному
+% \end{table}
 
