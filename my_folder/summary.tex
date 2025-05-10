@@ -26,17 +26,22 @@
 \formbytotal{myappendices}{приложен}{ие}{ия}{ий}%.  
 
 %\noindent
-{\MakeUppercase{Ключевые слова: \keywordsRu}.}\footnote{Всего \textbf{слов}: от 3 до 15. Всего \textbf{слов и словосочетаний}: от 3 до 5. Оформляются в именительном падеже множественного числа (или в единственном числе, если нет другой формы), оформленных по правилам русского языка. \textit{Внимание! Размещение сноски после точки является примером как запрещено оформлять сноски.}} % Ключевые слова из renames.tex
+{\MakeUppercase{Ключевые слова: \keywordsRu}.} % Ключевые слова из renames.tex
 
-Тема выпускной квалификационной работы: <<\thesisTitle>>\footnote{Реферат \textbf{должен содержать}: предмет, тему, цель ВКР; метод или методологию проведения ВКР; результаты ВКР; область применения результатов ВКР; выводы.}.
+% Тема выпускной квалификационной работы: <<\thesisTitle>>\footnote{Реферат \textbf{должен содержать}: предмет, тему, цель ВКР; метод или методологию проведения ВКР; результаты ВКР; область применения результатов ВКР; выводы.}.
+
+Дипломная работа посвящена актуальной проблеме автоматизации развертывания инфраструктуры для работы с большими данными. 
+
+Целью работы является разработка программного инструмента Data Platform Deployer(далее dpd), способного на основе декларативного описания, предоставленного пользователем в формате YAML, генерировать полный набор конфигурационных файлов и скриптов для запуска комплексной платформы данных. Входное описание включает определение таких компонентов, как системы управления базами данных (PostgreSQL в качестве источника, ClickHouse в качестве аналитического хранилища), S3-совместимое объектное хранилище (Minio), брокер сообщений Apache Kafka с настроенными топиками и коннекторами Kafka Connect (включая Debezium для CDC и S3 Sink), а также инструмент бизнес-аналитики Apache Superset. Разработанный инструмент dpd автоматически формирует docker-compose.yml файлы для контейнеризации сервисов, скрипты их инициализации и обеспечивает согласованность настроек между всеми компонентами. 
+
+Ключевыми преимуществами предлагаемого решения являются воспроизводимость конфигураций, значительное сокращение трудозатрат по сравнению с ручной настройкой, модульность для поддержки новых компонентов и обеспечение корректности взаимосвязей в развертываемой системе.
+
+% \abstractRu\footnote{ОТ 1000 ДО 1500 печатных знаков (ГОСТ Р 7.0.99-2018 СИБИД) на русский или английский текст. Текст реферата повторён дважды на русском и английском языке для демонстрации подхода к нумерации страниц.} % Аннотация из renames.tex
+
+% \abstractRu % УДАЛИТЬ. Повтор иллюстрации переноса текста на вторую страницу
 
 
-\abstractRu\footnote{ОТ 1000 ДО 1500 печатных знаков (ГОСТ Р 7.0.99-2018 СИБИД) на русский или английский текст. Текст реферата повторён дважды на русском и английском языке для демонстрации подхода к нумерации страниц.} % Аннотация из renames.tex
-
-\abstractRu % УДАЛИТЬ. Повтор иллюстрации переноса текста на вторую страницу
-
-
-
+\newpage
 \printTheAbstract % не удалять
 
 
@@ -49,11 +54,16 @@
 {\MakeUppercase{Keywords: \keywordsEn}.} % Ключевые слова из renames.tex 
 	
 The subject of the graduate qualification work is <<\thesisTitleEn>>.
-	
-	
-\abstractEn % Аннотация из renames.tex
 
-\abstractEn % УДАЛИТЬ. Повтор для иллюстрации переноса текста на вторую страницу
+This thesis addresses the relevant problem of automating the deployment of infrastructure for big data operations. 
+
+The aim of the work is to develop a software tool dpd (Data Platform Deployer) capable of generating a complete set of configuration files and scripts for launching a comprehensive data platform based on a declarative description provided by the user in YAML format. The input description includes the definition of components such as database management systems (PostgreSQL as a source, ClickHouse as an analytical data warehouse), S3-compatible object storage (Minio), Apache Kafka message broker with configured topics and Kafka Connect connectors (including Debezium for CDC and S3 Sink), and the Apache Superset business intelligence tool. The developed dpd tool automatically generates docker-compose.yml files for service containerization, their initialization scripts, and ensures the consistency of settings across all components. 
+
+Key advantages of the proposed solution include configuration reproducibility, significant reduction in labor costs compared to manual setup, modularity for supporting new components, and ensuring the correctness of interconnections within the deployed system.
+	
+% \abstractEn % Аннотация из renames.tex
+
+% \abstractEn % УДАЛИТЬ. Повтор для иллюстрации переноса текста на вторую страницу
 	
 
 

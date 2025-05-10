@@ -1,89 +1,115 @@
 %%%% Начало оформления заголовка - оставить без изменений !!! %%%%
 \input{my_folder/task_settings}	% настройки - начало 
-	
-				{%\normalfont %2020
-						\MakeUppercase{\SPbPU}}\\
-				\institute
+
+{%\normalfont %2020
+	\MakeUppercase{\SPbPU}}\\
+\institute
 
 \par}\intervalS% завершает input
 
-				\noindent
-				\begin{minipage}{\linewidth}
-				\vspace{\mfloatsep} % интервал 	
-				\begin{tabularx}{\linewidth}{Xl}
-					&УТВЕРЖДАЮ      \\
-					&\HeadTitle     \\			
-					&\underline{\hspace*{0.1\textheight}} \Head     \\
-					&<<\underline{\hspace*{0.05\textheight}}>> \underline{\hspace*{0.1\textheight}} \approveYear г.  \\  
-				\end{tabularx}
-				\vspace{\mfloatsep} % интервал 	
-				\end{minipage}
+\noindent
+\begin{minipage}{\linewidth}
+	\vspace{\mfloatsep} % интервал 	
+	\begin{tabularx}{\linewidth}{Xl}
+		 & УТВЕРЖДАЮ                                                                                      \\
+		 & \HeadTitle                                                                                     \\
+		 & \underline{\hspace*{0.1\textheight}} \Head                                                     \\
+		 & <<\underline{\hspace*{0.05\textheight}}>> \underline{\hspace*{0.1\textheight}} \approveYear г. \\
+	\end{tabularx}
+	\vspace{\mfloatsep} % интервал 	
+\end{minipage}
 
 \intervalS{\centering\bfseries%
 
-				ЗАДАНИЕ\\
-				на выполнение %с 2020 года 
-				%по выполнению % до 2020 года
-				выпускной квалификационной работы
+	ЗАДАНИЕ\\
+	на выполнение %с 2020 года 
+	%по выполнению % до 2020 года
+	выпускной квалификационной работы
 
 
-\intervalS\normalfont%
+	\intervalS\normalfont%
 
-				студенту \uline{\AuthorFullDat{} гр.~\group}
+	студенту \uline{\AuthorFullDat{} гр.~\group}
 
 
-\par}\intervalS%
+	\par}\intervalS%
 %%%%
 %%%% Конец оформления заголовка  %%%%
- 	
-	
-	
+
+
+
 \begin{enumerate}[1.]
 	\item Тема работы: {\expandafter \ulined \thesisTitle.}
-	%\item Тема работы (на английском языке): \uline{\thesisTitleEn.} % вероятно после 2021 года
-	\item Срок сдачи студентом законченной работы\footnote{Последний день преддипломной практики согласно учебному плану.}: \uline{\thesisDeadline.} 
-	\item Исходные данные по работе\footnote{Текст, который подчёркнут и/или выделен в отдельные элементы нумерационного списка, приведён в качестве примера.}: \uline{статистические данные с сайта \cite{gosstat}, а также из репозитория \cite{uci}; основным источником литературы является монография \cite{Book} и статья \cite{Article}.}%
-	\printbibliographyTask % печать списка источников % КОММЕНТИРУЕМ ЕСЛИ НЕ ИСПОЛЬЗУЕТСЯ
-	% В СЛУЧАЕ, ЕСЛИ НЕ ИСПОЛЬЗУЕТСЯ МОЖНО ТАКЖЕ ЗАЙТИ В setup.tex и закомментировать \vspace{-0.28\curtextsize}
+	      %\item Тема работы (на английском языке): \uline{\thesisTitleEn.} % вероятно после 2021 года
+	\item Срок сдачи студентом законченной работы: \uline{\thesisDeadline.}
+	\item Исходные данные по работе:%
+	      % \printbibliographyTask % печать списка источников % КОММЕНТИРУЕМ ЕСЛИ НЕ ИСПОЛЬЗУЕТСЯ
+	      % В СЛУЧАЕ, ЕСЛИ НЕ ИСПОЛЬЗУЕТСЯ МОЖНО ТАКЖЕ ЗАЙТИ В setup.tex и закомментировать \vspace{-0.28\curtextsize}
+	      \begin{itemize}
+		      \item Декларативные конфигурационные файлы в формате YAML, задаваемые пользователем (инженером данных) для описания инфраструктуры обработки данных
+		      \item Демонстрационный датасет, включающий тестовые данные, хранящиеся в различных источниках (PostgreSQL, S3) и обрабатываемые в системе
+		      \item Автоматически сгенерированные конфигурационные файлы
+	      \end{itemize}
+	\item Инструментальные средства:
+	      \begin{itemize}
+		      \item Языки программирования: Python
+		      \item Форматы конфигурационных файлов: YAML, JSON
+		      \item Среда разработки: VS Code
+		      \item Система управления версиями: Git
+		      \item Средства контейнеризации и оркестрации: Docker, Docker Compose
+		      \item Платформы потоковой обработки данных: Apache Kafka, Kafka Connect (Debezium)
+		      \item Системы управления базами данных (СУБД): PostgreSQL, ClickHouse
+		      \item BI-инструмент: Apache Superset
+	      \end{itemize}
 	\item Содержание работы (перечень подлежащих разработке вопросов):
-	\begin{enumerate}[label=\theenumi\arabic*.]
-		\item Обзор литературы по теме ВКР.
-		\item Исследование программных продуктов.
-		\item Разработка метода/алгоритма/программы.
-		\item Апробация разработанного метода/алгоритма/программы. 
-	\end{enumerate}
-	\item Перечень графического материала (с указанием обязательных чертежей): 
-	\begin{enumerate}[label=\theenumi\arabic*.]
-		\item Схема работы метода/алгоритма.
-		\item Архитектура разработанной программы/библиотеки.
-	\end{enumerate}	
-		\item Консультанты по работе\footnote{Подпись консультанта по нормоконтролю пока не требуется. Назначается всем по умолчанию.}:
-		\begin{enumerate}[label=\theenumi\arabic*.] 
-		\item  \uline{\emakefirstuc{\ConsultantExtraDegree}, \ConsultantExtra.} % закомментировать при необходимости, идёт первый по порядку.
-		\item \uline{\emakefirstuc{\ConsultantNormDegree}, \ConsultantNorm{} (нормоконтроль).} %	Обязателен для всех студентов
-	\end{enumerate}
-		\item Дата выдачи задания\footnote{Как правило не позднее 3 месяцев до ГИА (утверждение тем ВКР по университету) или строго не позже 30 дней до ГИА.}: \uline{\thesisStartDate.}
+	      \begin{enumerate}[label=\theenumi\arabic*.]
+		      \item Введение.
+		      \item Постановка задачи.
+		      \item Обзор существующих решений.
+		      \item Введение в предметную область.
+		      \item Разработка инструмента
+		      \item Проектирование и реализация инфраструктуры для работы с большими данными
+		      \item Исследование разработанного продукта
+		      \item Заключение
+	      \end{enumerate}
+	      Ключевые источники литературы:
+	      \begin{itemize}
+		      \item Альфред Ахо, Рави Сети, Джеффри Ульман. Раскрутка // Компиляторы: принципы, технологии и инструменты = Compilers: Principles, Techniques, and Tools. — М.: Вильямс, 2003. — С. 681—684. — 768 с. — ISBN 5-8459-0189-8.
+		      \item Фаулер М. Непрерывная поставка: Надежная автоматизация сборки, тестирования и развертывания программного обеспечения = Continuous Delivery: Reliable Software Releases through Build, Test, and Deployment Automation. — М.: Вильямс, 2011. — 432 с. — ISBN  978-5-8459-1739-3
+		      \item Таненбаум Э., ван Стин М. Распределенные системы: принципы и парадигмы = Distributed Systems: Principles and Paradigms. — 2-е изд. — М.:ДМК Пресс, 2021. — 584 с. — ISBN 978-5-97060-708-4  
+	      \end{itemize}
+	      % \item Перечень графического материала (с указанием обязательных чертежей):
+	      %       \begin{enumerate}[label=\theenumi\arabic*.]
+	      % 	      \item Схема работы метода/алгоритма.
+	      % 	      \item Архитектура разработанной программы/библиотеки.
+	      %       \end{enumerate}
+	% \item Консультанты по работе\:
+	%       \begin{enumerate}[label=\theenumi\arabic*.]
+	% 	      \item  \uline{\emakefirstuc{\ConsultantExtraDegree}, \ConsultantExtra.} % закомментировать при необходимости, идёт первый по порядку.
+	% 	      \item \uline{\emakefirstuc{\ConsultantNormDegree}, \ConsultantNorm{} (нормоконтроль).} %	Обязателен для всех студентов
+	%       \end{enumerate}
+	\item Дата выдачи задания: \uline{\thesisStartDate.}
 \end{enumerate}
 
 \intervalS%можно удалить пробел
 
-Руководитель ВКР \uline{\hspace*{0.1\textheight} \Supervisor}
+Руководитель ВКР \uline{\hspace*{0.325\textheight} \Supervisor}
 
 
 \intervalS%можно удалить пробел
 
-Консультант\footnote{В случае, если есть консультант, отличный от консультанта по нормоконтролю.}  \uline{\hspace*{0.1\textheight}\ConsultantExtra}
+Консультант  \uline{\hspace*{0.38\textheight}\ConsultantExtra}
 
 
 \intervalS%можно удалить пробел
 
 %Консультант по нормоконтролю \uline{\hspace*{0.1\textheight} \ConsultantNorm}%ПОКА НЕ ТРЕБУЕТСЯ, Т.К. ОН У ВСЕХ ПО УМОЛЧАНИЮ
 
-Задание принял к исполнению \uline{\thesisStartDate}
+Задание принял к исполнению
 
 \intervalS%можно удалить пробел
 
-Студент \uline{\hspace*{0.1\textheight}  \Author}
+Студент \uline{\hspace*{0.41\textheight}  \Author}
 
 
 
